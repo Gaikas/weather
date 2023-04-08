@@ -1,15 +1,34 @@
 from django.shortcuts import render
 import requests
+from . models import City
+from . forms import CityForm
 
 def index(request):
-    appid = "6f10b3c18f9c94b32a2be17ef126a439"
+    appid = "c818b06e8114d649adf450a0a9ca213c"
     url = "https://api.openweathermap.org/data/2.5/weather?q={}&units=metric&appid=" + appid
-    city = "Pinsk"
-    res = requests.get(url.format(city)).json()
-    city_info = {
-        'city': city,
-        'temp': res["main"]["temp"],
-        'icon': res["weather"][0]["icon"],
-    }
-    context = {'info': city_info}
+
+    if request.method == 'POST':
+        form = CityForm(request.POST)
+        form.save()
+
+    form = CityForm()
+
+    cities = City.objects.all()
+
+    all_cities = []
+
+    for city in cities:
+        res = requests.get(url.format(city.name)).json()
+        city_info = {
+            'city': city.name,
+            'temp': res['main']['temp'],
+            'wind': res['wind']['speed'],
+            'icon': res['weather'][0]['icon'],
+            }
+        all_cities.append(city_info)
+
+    context = {'all_info': all_cities, 'form': form}
     return render(request, 'weather/index.html', context)
+
+def about(request):
+    return render(request, "weather/about.html")
