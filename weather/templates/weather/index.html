@@ -4,11 +4,17 @@
             <div class = "col-5 offset-1">
                 <form action = "" method = "POST">
                     {% csrf_token %}
-                    <label for ="city">Город</label>
+                    <label for ="city"><h1>Введите город</h1></label>
                         {{form.name}}
-                    <input type = "submit" name = "send" value="Узнать" class = "mt-5 btn btn-danger">
+                    <input type = "submit" name = "send" value="Узнать" class = "mt-3 btn btn-danger">
                 </form>
+                <div class="col-6">
+                    {% if message %}
+                    <div class = "mt-5"><h5>{{ message }}</h5></div>
+                    {% endif %}
+                </div>
             </div>
+
             <div class = "col-4 offset-1">
                 <h1>Информация</h1>
                 {% for info in all_info %}
@@ -16,7 +22,7 @@
                 <div class = "row">
                     <div class = "col-9">
                         <b>Город: </b>{{info.city}}<br>
-                        <b>Температура: </b>{{info.temp}}<sup>0</sup><br>
+                        <b>Температура: </b>{{info.temp}}<sup>o</sup><br>
                         <b>Ветер (м/сек): </b>{{info.wind}}<br>
                     </div>
                     <div class = "col-2 offset-1">
